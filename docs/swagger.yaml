@@ -1,0 +1,68 @@
+basePath: /
+definitions:
+  request.Goods:
+    properties:
+      goods_name:
+        type: string
+      price:
+        type: integer
+      seckill_time:
+        type: string
+      stock:
+        type: integer
+    type: object
+info:
+  contact: {}
+  description: An example of gin
+  license:
+    name: MIT
+    url: https://Pay/blob/master/LICENSE
+  termsOfService: https://github.com/EDDYCJY/go-gin-example
+  title: Golang Gin API
+  version: "1.0"
+paths:
+  /goods/:
+    post:
+      description: 添加
+      parameters:
+      - description: reqBody
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/request.Goods'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      summary: 添加
+      tags:
+      - Project
+  /goods/{id}:
+    get:
+      description: 列出全部项目
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: 查询
+      tags:
+      - Project
+securityDefinitions:
+  Token:
+    in: header
+    name: token
+    type: apiKey
+swagger: "2.0"
