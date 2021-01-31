@@ -10,7 +10,6 @@ import (
 	"seckill-server/setting"
 )
 
-
 // @title Golang Gin API
 // @version 1.0
 // @description An example of gin
@@ -34,5 +33,14 @@ func main() {
 		goodsApi.GET("/:id", controller.GetGoods)
 		goodsApi.POST("/", controller.AddGoods)
 	}
-	r.Run(":7087") // listen and serve on 0.0.0.0:8080}
+
+	userApi := r.Group("/user")
+	{
+		userApi.POST("/login", controller.Login)
+		//初始化用户
+		userApi.POST("/register", controller.Register)
+		//添加收货地址
+		userApi.POST("/address/")
+	}
+	_ = r.Run(":7087") // listen and serve on 0.0.0.0:8080}
 }

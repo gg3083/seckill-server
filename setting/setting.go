@@ -6,8 +6,12 @@ import (
 )
 
 type Sql struct {
-	Goods string
-	Userinfo string
+	Goods          string
+	UserInfo       string
+	UserAddress    string
+	UserFund       string
+	UserFundRecord string
+	Order          string
 }
 
 var SqlScript = &Sql{}

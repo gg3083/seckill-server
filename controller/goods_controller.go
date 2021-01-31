@@ -49,21 +49,21 @@ func AddGoods(c *gin.Context) {
 		app.ErrorResp(c, http.StatusBadRequest, "请求格式错误！")
 		return
 	}
-	seckillTime, err := time.Parse("2006-01-02 15:04:05",from.SeckillTime)
+	seckillTime, err := time.Parse("2006-01-02 15:04:05", from.SeckillTime)
 	if err != nil {
 		app.ErrorResp(c, http.StatusBadRequest, "秒杀开始时间格式错误！")
 		return
 	}
+	id := util.GetUniqueNo(consts.BusinessGoodsTable)
 	goodsService := service.Goods{
-		PkId:        util.GetUniqueNo(consts.BusinessGoodsTale),
+		PkId:        id,
 		GoodsName:   from.GoodsName,
 		Price:       from.Price,
 		Stock:       from.Stock,
 		IsSeckill:   1,
 		SeckillTime: seckillTime.Unix(),
 	}
-	id, err := goodsService.Add()
-	if err != nil {
+	if err := goodsService.Add(); err != nil {
 		app.ErrorResp(c, http.StatusBadRequest, err.Error())
 		return
 	}

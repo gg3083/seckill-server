@@ -2,7 +2,9 @@ package consts
 
 const (
 	_ = iota
-	BusinessUserTale
-	BusinessGoodsTale
+	BusinessUserTable
+	BusinessGoodsTable
+	BusinessOrderTable
 )
 
+const PasswordSalt = "PasswordSalt"

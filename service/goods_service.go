@@ -18,7 +18,7 @@ func (g *Goods) Get() (*model.Goods, error) {
 	return goodsModel.GetByPkId(g.PkId)
 }
 
-func (g *Goods) Add() (int64, error) {
+func (g *Goods) Add() error {
 	goodsModel := model.Goods{
 		PkId:        g.PkId.(int64),
 		GoodsName:   g.GoodsName,

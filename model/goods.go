@@ -17,21 +17,21 @@ type Goods struct {
 	UpdateTime string `json:"update_time"`
 }
 
-func (g *Goods) Insert() (int64, error) {
+func (g *Goods) Insert() error {
 	sql := fmt.Sprintf(
 		"INSERT INTO `t_goods`(`pk_id`, `goods_name`, `price`, `sale_num`, `stock`, `is_seckill`, `seckill_time`, `version`) VALUES (?, ?, ?, 0, ?, ?, ?, 0)")
 	stmt, err := mdb.Prepare(sql)
 	if err != nil {
-		return -1, err
+		return err
 	}
-	_, err = stmt.Exec(g.PkId, g.GoodsName, g.Price,  g.Stock, g.IsSeckill, g.SeckillTime)
+	_, err = stmt.Exec(g.PkId, g.GoodsName, g.Price, g.Stock, g.IsSeckill, g.SeckillTime)
 	if err != nil {
-		return -1, err
+		return err
 	}
-	return g.PkId, nil
+	return nil
 }
 
-func (g *Goods) GetByPkId(id interface{}) (*Goods, error ){
+func (g *Goods) GetByPkId(id interface{}) (*Goods, error) {
 	sql := fmt.Sprintf(
 		"select * from t_goods where pk_id = ?")
 	row, err := mdb.Query(sql, id)
@@ -44,7 +44,7 @@ func (g *Goods) GetByPkId(id interface{}) (*Goods, error ){
 		if err != nil {
 			return nil, err
 		}
-	}else {
+	} else {
 		return nil, fmt.Errorf("id:%v 不存在", id)
 	}
 	return &goods, nil

@@ -1,9 +1,9 @@
 package model
 
 type Order struct {
-	PkId            string `json:"pk_id"`
-	FkGoodId        int    `json:"fk_good_id"`
-	FkUserId        int `json:"fk_user_id"`
+	PkId            int64  `json:"pk_id"`
+	FkGoodId        int64  `json:"fk_good_id"`
+	FkUserId        int64  `json:"fk_user_id"`
 	GoodsName       string `json:"goods_name"`
 	Price           int64  `json:"price"`
 	Num             int    `json:"num"`
@@ -12,4 +12,8 @@ type Order struct {
 	DeliveryAddress string `json:"delivery_address"`
 	PayTime         int64  `json:"pay_time"`
 	CreateTime      string `json:"create_time"`
+}
+
+func (order *Order) Insert() error {
+
 }

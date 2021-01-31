@@ -14,10 +14,10 @@ var (
 	mdb *sql.DB
 )
 
-var TableNameList = []string{"t_goods", "t_userinfo"}
+var TableNameList = []string{"t_goods", "t_user_info", "t_user_address", "t_user_fund", "t_user_fund_record", "t_order"}
 
 func InitMysql() {
-	uri := fmt.Sprintf("%s:%s@%s(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", "root", "Qwe123.0", "tcp", "localhost", "3306", "seckill-server")
+	uri := fmt.Sprintf("%s:%s@%s(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", "root", "root", "tcp", "localhost", "3306", "seckill-server")
 	mdb, err = sql.Open("mysql", uri)
 	if err != nil {
 		log.Fatalf("Open mysql failed,err:%v\n", err)
@@ -31,21 +31,17 @@ func InitMysql() {
 func existTable(tableNames []string) {
 	for _, tableName := range tableNames {
 		log.Printf("开始检测%s表是否存在\n", tableName)
-		var name string
-		row, err2 := mdb.Query("SELECT table_name FROM information_schema.TABLES WHERE table_name = ?", tableName)
+		var count int
+		err2 := mdb.QueryRow("SELECT count(1) FROM information_schema.TABLES WHERE table_schema = ? and table_name = ?", "seckill-server", tableName).Scan(&count)
 		if err2 != nil {
 			log.Fatalf("connect mysql failed,err:%v\n", err2.Error())
 		}
-		if row.Next() {
-			if err3 := row.Scan(&name); err3 != nil{
-				log.Println("err:", err3)
-				//执行创建sql脚本初始化
-				initTable(tableName)
-			}else {
-				log.Printf("表%s已存在\n", name)
-			}
-		}else {
+		if count == 0 {
+			//执行创建sql脚本初始化
 			initTable(tableName)
+		} else {
+			log.Printf("表%s已存在\n", tableName)
+
 		}
 
 	}
@@ -56,13 +52,21 @@ func initTable(tableName string) {
 	switch tableName {
 	case "t_goods":
 		script = setting.SqlScript.Goods
-	case "t_userinfo":
-		script = setting.SqlScript.Userinfo
+	case "t_user_info":
+		script = setting.SqlScript.UserInfo
+	case "t_user_address":
+		script = setting.SqlScript.UserAddress
+	case "t_user_fund":
+		script = setting.SqlScript.UserFund
+	case "t_user_fund_record":
+		script = setting.SqlScript.UserFundRecord
+	case "t_order":
+		script = setting.SqlScript.Order
 	default:
 		script = ""
 	}
 	if script == "" {
-		log.Fatalf("表%s不存在\n", tableName)
+		log.Fatalf("表%s不存在，且不存在初始化脚本\n", tableName)
 	}
 	log.Printf("初始化表%s,脚本为%s\n", tableName, script)
 	_, err2 := mdb.Exec(script)
