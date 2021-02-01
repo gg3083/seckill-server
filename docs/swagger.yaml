@@ -11,6 +11,51 @@ definitions:
       stock:
         type: integer
     type: object
+  v1.BuyForm:
+    properties:
+      address:
+        properties:
+          city:
+            type: string
+          detail:
+            type: string
+          pk_id:
+            type: integer
+          province:
+            type: string
+        type: object
+      fk_good_id:
+        type: integer
+      num:
+        type: integer
+      price:
+        type: integer
+      total_price:
+        type: integer
+    type: object
+  v1.ChargeForm:
+    properties:
+      amount:
+        type: integer
+      source:
+        type: integer
+    type: object
+  v1.RegisterForm:
+    properties:
+      pass_word:
+        type: string
+      user_name:
+        type: string
+    type: object
+  v1.UserAddressForm:
+    properties:
+      city:
+        type: string
+      detail:
+        type: string
+      province:
+        type: string
+    type: object
 info:
   contact: {}
   description: An example of gin
@@ -21,7 +66,29 @@ info:
   title: Golang Gin API
   version: "1.0"
 paths:
-  /goods/:
+  /auth/fund/charge:
+    post:
+      description: 充值
+      parameters:
+      - description: reqBody
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/v1.ChargeForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      security:
+      - Token: []
+      summary: 充值
+      tags:
+      - Fund
+  /auth/goods/:
     post:
       description: 添加
       parameters:
@@ -38,9 +105,55 @@ paths:
           description: '{"code":200,"data":{},"msg":"ok"}'
           schema:
             type: string
+      security:
+      - Token: []
       summary: 添加
       tags:
       - Project
+  /auth/order/buy:
+    post:
+      description: 下单
+      parameters:
+      - description: reqBody
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/v1.BuyForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      security:
+      - Token: []
+      summary: 下单
+      tags:
+      - Order
+  /auth/user/address:
+    post:
+      description: 地址
+      parameters:
+      - description: reqBody
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/v1.UserAddressForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      security:
+      - Token: []
+      summary: 地址
+      tags:
+      - User
   /goods/{id}:
     get:
       description: 列出全部项目
@@ -60,6 +173,46 @@ paths:
       summary: 查询
       tags:
       - Project
+  /user/login:
+    post:
+      description: 登录
+      parameters:
+      - description: reqBody
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/v1.RegisterForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      summary: 登录
+      tags:
+      - User
+  /user/register:
+    post:
+      description: 注册
+      parameters:
+      - description: reqBody
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/v1.RegisterForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      summary: 注册
+      tags:
+      - User
 securityDefinitions:
   Token:
     in: header

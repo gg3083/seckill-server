@@ -29,8 +29,49 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/goods/": {
+        "/auth/fund/charge": {
             "post": {
+                "security": [
+                    {
+                        "Token": []
+                    }
+                ],
+                "description": "充值",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Fund"
+                ],
+                "summary": "充值",
+                "parameters": [
+                    {
+                        "description": "reqBody",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.ChargeForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\":200,\"data\":{},\"msg\":\"ok\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/goods/": {
+            "post": {
+                "security": [
+                    {
+                        "Token": []
+                    }
+                ],
                 "description": "添加",
                 "produces": [
                     "application/json"
@@ -47,6 +88,78 @@ var doc = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/request.Goods"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\":200,\"data\":{},\"msg\":\"ok\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/order/buy": {
+            "post": {
+                "security": [
+                    {
+                        "Token": []
+                    }
+                ],
+                "description": "下单",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "下单",
+                "parameters": [
+                    {
+                        "description": "reqBody",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.BuyForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\":200,\"data\":{},\"msg\":\"ok\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/user/address": {
+            "post": {
+                "security": [
+                    {
+                        "Token": []
+                    }
+                ],
+                "description": "地址",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "地址",
+                "parameters": [
+                    {
+                        "description": "reqBody",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.UserAddressForm"
                         }
                     }
                 ],
@@ -88,6 +201,68 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/user/login": {
+            "post": {
+                "description": "登录",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "登录",
+                "parameters": [
+                    {
+                        "description": "reqBody",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.RegisterForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\":200,\"data\":{},\"msg\":\"ok\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/register": {
+            "post": {
+                "description": "注册",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "注册",
+                "parameters": [
+                    {
+                        "description": "reqBody",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.RegisterForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\":200,\"data\":{},\"msg\":\"ok\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -105,6 +280,76 @@ var doc = `{
                 },
                 "stock": {
                     "type": "integer"
+                }
+            }
+        },
+        "v1.BuyForm": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "object",
+                    "properties": {
+                        "city": {
+                            "type": "string"
+                        },
+                        "detail": {
+                            "type": "string"
+                        },
+                        "pk_id": {
+                            "type": "integer"
+                        },
+                        "province": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "fk_good_id": {
+                    "type": "integer"
+                },
+                "num": {
+                    "type": "integer"
+                },
+                "price": {
+                    "type": "integer"
+                },
+                "total_price": {
+                    "type": "integer"
+                }
+            }
+        },
+        "v1.ChargeForm": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "source": {
+                    "type": "integer"
+                }
+            }
+        },
+        "v1.RegisterForm": {
+            "type": "object",
+            "properties": {
+                "pass_word": {
+                    "type": "string"
+                },
+                "user_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.UserAddressForm": {
+            "type": "object",
+            "properties": {
+                "city": {
+                    "type": "string"
+                },
+                "detail": {
+                    "type": "string"
+                },
+                "province": {
+                    "type": "string"
                 }
             }
         }

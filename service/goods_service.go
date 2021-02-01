@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"seckill-server/model"
 )
 
@@ -16,6 +17,17 @@ type Goods struct {
 func (g *Goods) Get() (*model.Goods, error) {
 	goodsModel := model.Goods{}
 	return goodsModel.GetByPkId(g.PkId)
+}
+
+func (g *Goods) ValidStock() (bool, error) {
+	goods, err := g.Get()
+	if err != nil {
+		return false, err
+	}
+	if goods.Stock <= 0 {
+		return false, errors.New("库存不足！")
+	}
+	return true, nil
 }
 
 func (g *Goods) Add() error {

@@ -43,6 +43,7 @@ CREATE TABLE `t_user_fund_record`  (
   `fk_user_id` bigint NULL,
   `amount` bigint NULL,
   `type` int(11) NULL,
+  `source` int(11) NULL,
   `create_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`pk_id`)
 );

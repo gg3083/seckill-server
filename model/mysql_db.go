@@ -6,6 +6,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"seckill-server/setting"
+	"strings"
 	"time"
 )
 
@@ -17,7 +18,7 @@ var (
 var TableNameList = []string{"t_goods", "t_user_info", "t_user_address", "t_user_fund", "t_user_fund_record", "t_order"}
 
 func InitMysql() {
-	uri := fmt.Sprintf("%s:%s@%s(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", "root", "root", "tcp", "localhost", "3306", "seckill-server")
+	uri := fmt.Sprintf("%s:%s@%s(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", "root", "Qwe123.0", "tcp", "localhost", "3306", "seckill-server")
 	mdb, err = sql.Open("mysql", uri)
 	if err != nil {
 		log.Fatalf("Open mysql failed,err:%v\n", err)
@@ -41,9 +42,11 @@ func existTable(tableNames []string) {
 			initTable(tableName)
 		} else {
 			log.Printf("表%s已存在\n", tableName)
-
+			if setting.SqlScript.IsFlush {
+				clearTable(tableName)
+				initTable(tableName)
+			}
 		}
-
 	}
 }
 
@@ -70,6 +73,36 @@ func initTable(tableName string) {
 	}
 	log.Printf("初始化表%s,脚本为%s\n", tableName, script)
 	_, err2 := mdb.Exec(script)
+	if err2 != nil {
+		log.Fatalf("初始化表失败 %s", err2.Error())
+	}
+	log.Printf("表%s初始化成功！\n", tableName)
+}
+
+func clearTable(tableName string) {
+	var script strings.Builder
+	script.WriteString("drop table ")
+	switch tableName {
+	case "t_goods":
+		script.WriteString(tableName)
+	case "t_user_info":
+		script.WriteString(tableName)
+	case "t_user_address":
+		script.WriteString(tableName)
+	case "t_user_fund":
+		script.WriteString(tableName)
+	case "t_user_fund_record":
+		script.WriteString(tableName)
+	case "t_order":
+		script.WriteString(tableName)
+	default:
+		script.Reset()
+	}
+	if script.String() == "" {
+		log.Fatalf("表%s不存在，且不存在初始化脚本\n", tableName)
+	}
+	log.Printf("初始化表%s,脚本为%s\n", tableName, script.String())
+	_, err2 := mdb.Exec(script.String())
 	if err2 != nil {
 		log.Fatalf("初始化表失败 %s", err2.Error())
 	}

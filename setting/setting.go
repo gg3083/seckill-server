@@ -6,6 +6,7 @@ import (
 )
 
 type Sql struct {
+	IsFlush        bool
 	Goods          string
 	UserInfo       string
 	UserAddress    string

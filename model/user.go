@@ -12,8 +12,8 @@ type UserInfo struct {
 }
 
 type UserAddress struct {
-	PkId     int    `json:"pk_id"`
-	FkUserId int    `json:"fk_user_id"`
+	PkId     int64  `json:"pk_id"`
+	FkUserId int64  `json:"fk_user_id"`
 	Province string `json:"province"`
 	City     string `json:"city"`
 	Detail   string `json:"detail"`
@@ -22,8 +22,8 @@ type UserAddress struct {
 }
 
 type UserFund struct {
-	PkId     int   `json:"pk_id"`
-	FkUserId int   `json:"fk_user_id"`
+	PkId     int64 `json:"pk_id"`
+	FkUserId int64 `json:"fk_user_id"`
 	Balance  int64 `json:"balance"`
 	Version  int   `json:"version"`
 	//...
@@ -31,10 +31,11 @@ type UserFund struct {
 }
 
 type UserFundRecord struct {
-	PkId     int   `json:"pk_id"`
-	FkUserId int   `json:"fk_user_id"`
+	PkId     int64 `json:"pk_id"`
+	FkUserId int64 `json:"fk_user_id"`
 	Amount   int64 `json:"amount"`
 	Type     int   `json:"type"`
+	Source   int   `json:"source"`
 	//...
 	CreateTime string `json:"create_time"`
 }
@@ -169,17 +170,31 @@ func (u *UserFund) GetUserFundByUserId(userId interface{}) (*UserFund, error) {
 	} else {
 		return nil, fmt.Errorf("用户:%v 不存在", userId)
 	}
-	return nil, nil
+	return &userFund, nil
 }
 
-func (u *UserFundRecord) InsertUserFundRecord() error {
+func (u *UserFund) AddFundBalanceByUserId(userId interface{}, amount int64) error {
 	sql := fmt.Sprintf(
-		"INSERT INTO `t_user_fund`(`pk_id`, `fk_user_id`, `amount`, `type`) VALUES (?, ?, ?, ?)")
+		"update t_user_fund set balance = balance + ? , version = version + 1 where fk_user_id = ?")
 	stmt, err := mdb.Prepare(sql)
 	if err != nil {
 		return err
 	}
-	_, err = stmt.Exec(u.PkId, u.FkUserId, u.Amount, u.Type)
+	_, err = stmt.Exec(amount, userId)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (u *UserFundRecord) InsertUserFundRecord() error {
+	sql := fmt.Sprintf(
+		"INSERT INTO `t_user_fund_record` (`pk_id`, `fk_user_id`, `amount`, `type`,`source`) VALUES (?, ?, ?, ?, ?)")
+	stmt, err := mdb.Prepare(sql)
+	if err != nil {
+		return err
+	}
+	_, err = stmt.Exec(u.PkId, u.FkUserId, u.Amount, u.Type, u.Source)
 	if err != nil {
 		return err
 	}

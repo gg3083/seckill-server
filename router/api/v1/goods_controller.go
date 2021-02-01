@@ -1,4 +1,4 @@
-package controller
+package v1
 
 import (
 	"github.com/gin-gonic/gin"
@@ -41,7 +41,8 @@ func GetGoods(c *gin.Context) {
 // @Produce  json
 // @Param form body request.Goods true "reqBody"
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
-// @Router /goods/ [post]
+// @Router /auth/goods/ [post]
+// @Security Token
 func AddGoods(c *gin.Context) {
 	var from request.Goods
 
