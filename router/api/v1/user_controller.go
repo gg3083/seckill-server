@@ -65,9 +65,9 @@ func Login(c *gin.Context) {
 }
 
 type UserAddressForm struct {
-	Province string
-	City     string
-	Detail   string
+	Province string `json:"province"`
+	City     string `json:"city"`
+	Detail   string `json:"detail"`
 }
 
 // @Tags User
