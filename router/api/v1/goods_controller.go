@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"seckill-server/pkg/app"
@@ -8,6 +9,7 @@ import (
 	"seckill-server/pkg/util"
 	"seckill-server/request"
 	"seckill-server/service"
+	"strconv"
 	"time"
 )
 
@@ -24,8 +26,13 @@ func GetGoods(c *gin.Context) {
 		app.ErrorResp(c, http.StatusBadRequest, "Id不能为空")
 		return
 	}
+	id, err := strconv.ParseInt(paramId, 10, 64)
+	if err != nil {
+		app.ErrorResp(c, http.StatusBadRequest, "Id错误")
+		return
+	}
 	goodsService := service.Goods{
-		PkId: paramId,
+		PkId: id,
 	}
 	res, err := goodsService.Get()
 	if err != nil {
@@ -67,5 +74,5 @@ func AddGoods(c *gin.Context) {
 		app.ErrorResp(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	app.SuccessResp(c, id)
+	app.SuccessResp(c, fmt.Sprintf("%v", id))
 }

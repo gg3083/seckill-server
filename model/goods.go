@@ -50,7 +50,16 @@ func (g *Goods) GetByPkId(id interface{}) (*Goods, error) {
 	return &goods, nil
 }
 
-func (g *Goods) Update() error {
-
+func (g *Goods) UpdateSaleNum(saleNum int) error {
+	sql := fmt.Sprintf(
+		"update `t_goods` set `sale_num` = ? , `version` = `version` + 1 where pk_id = ?")
+	stmt, err := mdb.Prepare(sql)
+	if err != nil {
+		return err
+	}
+	_, err = stmt.Exec(saleNum, g.PkId)
+	if err != nil {
+		return err
+	}
 	return nil
 }

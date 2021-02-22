@@ -6,12 +6,13 @@ import (
 )
 
 type Goods struct {
-	PkId        interface{}
+	PkId        int64
 	GoodsName   string
 	Price       int64
 	Stock       int
 	IsSeckill   int
 	SeckillTime int64
+	SaleNum     int
 }
 
 func (g *Goods) Get() (*model.Goods, error) {
@@ -32,7 +33,7 @@ func (g *Goods) ValidStock() (bool, error) {
 
 func (g *Goods) Add() error {
 	goodsModel := model.Goods{
-		PkId:        g.PkId.(int64),
+		PkId:        g.PkId,
 		GoodsName:   g.GoodsName,
 		Price:       g.Price,
 		IsSeckill:   g.IsSeckill,
@@ -42,10 +43,9 @@ func (g *Goods) Add() error {
 	return goodsModel.Insert()
 }
 
-func (g *Goods) UpdateSaleName(num int) error {
+func (g *Goods) Update(saleNum int) error {
 	goodsModel := model.Goods{
-		PkId:    g.PkId.(int64),
-		SaleNum: num,
+		PkId: g.PkId,
 	}
-	return goodsModel.Update()
+	return goodsModel.UpdateSaleNum(saleNum)
 }

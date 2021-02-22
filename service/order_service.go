@@ -44,9 +44,11 @@ func (o *Order) Buy() (*model.Order, error) {
 		return nil, err
 	}
 	//增加商品销量
-	goodsService.UpdateSaleName(o.Num)
-	//生成订单
+	if err := goodsService.Update(o.Num); err != nil {
+		return nil, err
+	}
 
+	//生成订单
 	id := util.GetUniqueNo(consts.BusinessOrderTable)
 	orderDao := model.Order{
 		PkId:            id,
