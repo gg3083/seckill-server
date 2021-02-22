@@ -49,3 +49,8 @@ func (g *Goods) GetByPkId(id interface{}) (*Goods, error) {
 	}
 	return &goods, nil
 }
+
+func (g *Goods) Update() error {
+
+	return nil
+}

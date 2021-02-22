@@ -37,6 +37,15 @@ func (g *Goods) Add() error {
 		Price:       g.Price,
 		IsSeckill:   g.IsSeckill,
 		SeckillTime: g.SeckillTime,
+		Stock:       g.Stock,
 	}
 	return goodsModel.Insert()
+}
+
+func (g *Goods) UpdateSaleName(num int) error {
+	goodsModel := model.Goods{
+		PkId:    g.PkId.(int64),
+		SaleNum: num,
+	}
+	return goodsModel.Update()
 }

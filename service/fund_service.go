@@ -27,7 +27,7 @@ func (fund *UserFund) ValidBalance(amount int64) (bool, error) {
 	return true, nil
 }
 
-func (fund *UserFund) AddBalance(amount int64) error {
+func (fund *UserFund) AddBalance(amount int64, amountType int) error {
 
 	fundDao := model.UserFund{}
 
@@ -40,7 +40,29 @@ func (fund *UserFund) AddBalance(amount int64) error {
 		PkId:     fundRecordId,
 		FkUserId: fund.FkUserId,
 		Amount:   amount,
-		Type:     consts.AmountAdd,
+		Type:     amountType,
+		Source:   fund.Source,
+	}
+	if err := recordDao.InsertUserFundRecord(); err != nil {
+		return err
+	}
+	return nil
+}
+
+type UserFundRecord struct {
+	FkUserId int64 `json:"fk_user_id"`
+	Amount   int64 `json:"amount"`
+	Type     int   `json:"type"`
+	Source   int   `json:"source"`
+}
+
+func (fund *UserFundRecord) AddRecord(amount int64, recordType int) error {
+	fundRecordId := util.GetUniqueNo(consts.BusinessUserFundRecordTable)
+	recordDao := model.UserFundRecord{
+		PkId:     fundRecordId,
+		FkUserId: fund.FkUserId,
+		Amount:   amount,
+		Type:     recordType,
 		Source:   fund.Source,
 	}
 	if err := recordDao.InsertUserFundRecord(); err != nil {

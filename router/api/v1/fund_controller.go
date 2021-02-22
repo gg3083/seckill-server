@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"seckill-server/pkg/app"
+	"seckill-server/pkg/consts"
 	"seckill-server/service"
 )
 
@@ -39,7 +40,7 @@ func Charge(c *gin.Context) {
 		Source:   form.Source,
 	}
 	amount := int64(form.Amount) * 10000
-	err := fundService.AddBalance(amount)
+	err := fundService.AddBalance(amount, consts.AmountAdd)
 	if err != nil {
 		app.ErrorResp(c, http.StatusInternalServerError, err.Error())
 		return

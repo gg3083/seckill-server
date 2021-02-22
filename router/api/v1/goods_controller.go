@@ -41,8 +41,7 @@ func GetGoods(c *gin.Context) {
 // @Produce  json
 // @Param form body request.Goods true "reqBody"
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
-// @Router /auth/goods/ [post]
-// @Security Token
+// @Router /goods/ [post]
 func AddGoods(c *gin.Context) {
 	var from request.Goods
 

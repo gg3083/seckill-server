@@ -88,28 +88,6 @@ paths:
       summary: 充值
       tags:
       - Fund
-  /auth/goods/:
-    post:
-      description: 添加
-      parameters:
-      - description: reqBody
-        in: body
-        name: form
-        required: true
-        schema:
-          $ref: '#/definitions/request.Goods'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: '{"code":200,"data":{},"msg":"ok"}'
-          schema:
-            type: string
-      security:
-      - Token: []
-      summary: 添加
-      tags:
-      - Project
   /auth/order/buy:
     post:
       description: 下单
@@ -154,6 +132,26 @@ paths:
       summary: 地址
       tags:
       - User
+  /goods/:
+    post:
+      description: 添加
+      parameters:
+      - description: reqBody
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/request.Goods'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      summary: 添加
+      tags:
+      - Project
   /goods/{id}:
     get:
       description: 列出全部项目

@@ -65,42 +65,6 @@ var doc = `{
                 }
             }
         },
-        "/auth/goods/": {
-            "post": {
-                "security": [
-                    {
-                        "Token": []
-                    }
-                ],
-                "description": "添加",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Project"
-                ],
-                "summary": "添加",
-                "parameters": [
-                    {
-                        "description": "reqBody",
-                        "name": "form",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.Goods"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{\"code\":200,\"data\":{},\"msg\":\"ok\"}",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
         "/auth/order/buy": {
             "post": {
                 "security": [
@@ -160,6 +124,37 @@ var doc = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/v1.UserAddressForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\":200,\"data\":{},\"msg\":\"ok\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/goods/": {
+            "post": {
+                "description": "添加",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Project"
+                ],
+                "summary": "添加",
+                "parameters": [
+                    {
+                        "description": "reqBody",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.Goods"
                         }
                     }
                 ],

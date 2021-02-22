@@ -26,6 +26,12 @@ func (o *Order) Buy() (*model.Order, error) {
 		return nil, err
 	}
 
+	goods, err := goodsService.Get()
+
+	if err != nil {
+		return nil, err
+	}
+
 	//检测用户余额
 	fundService := UserFund{
 		FkUserId: o.FkUserId,
@@ -33,12 +39,12 @@ func (o *Order) Buy() (*model.Order, error) {
 	if _, err := fundService.ValidBalance(o.Price * int64(o.Num)); err != nil {
 		return nil, err
 	}
-
-	goods, err := goodsService.Get()
-
-	if err != nil {
+	//扣钱
+	if err := fundService.AddBalance(-(o.Price * int64(o.Num)), consts.AmountSub); err != nil {
 		return nil, err
 	}
+	//增加商品销量
+	goodsService.UpdateSaleName(o.Num)
 	//生成订单
 
 	id := util.GetUniqueNo(consts.BusinessOrderTable)

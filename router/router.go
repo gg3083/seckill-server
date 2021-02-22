@@ -15,12 +15,12 @@ func InitRouter() *gin.Engine {
 	goodsApi := r.Group("/goods")
 	{
 		goodsApi.GET("/:id", v1.GetGoods)
+		goodsApi.POST("/", v1.AddGoods)
 	}
 
 	goodsAuthApi := r.Group("/auth/goods")
 	goodsAuthApi.Use(util.JWT())
 	{
-		goodsAuthApi.POST("/", v1.AddGoods)
 
 	}
 
