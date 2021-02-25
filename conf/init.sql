@@ -1,6 +1,6 @@
 # t_goods
 CREATE TABLE `t_goods`  (
-    `pk_id` bigint NOT NULL,
+    `pk_id` varchar(255) NOT NULL,
     `goods_name` varchar(255) NULL,
     `price` bigint NULL,
     `sale_num` int NULL,
@@ -13,7 +13,7 @@ CREATE TABLE `t_goods`  (
 );
 # t_userinfo
 CREATE TABLE `t_user_info`  (
-    `pk_id` bigint NOT NULL,
+    `pk_id` varchar(255) NOT NULL,
     `user_name` varchar(255) NULL,
     `password` varchar(255) NULL,
     `token` varchar(255) NULL,
@@ -21,8 +21,8 @@ CREATE TABLE `t_user_info`  (
     PRIMARY KEY (`pk_id`)
 );
 CREATE TABLE `t_user_address`  (
-  `pk_id` bigint NOT NULL,
-  `fk_user_id` bigint NULL,
+  `pk_id` varchar(255) NOT NULL,
+  `fk_user_id` varchar(255) NULL,
   `province` varchar(255) NULL,
   `city` varchar(255) NULL,
   `detail` varchar(255) NULL,
@@ -30,8 +30,8 @@ CREATE TABLE `t_user_address`  (
   PRIMARY KEY (`pk_id`)
 );
 CREATE TABLE `t_user_fund`  (
-  `pk_id` bigint NOT NULL,
-  `fk_user_id` bigint NULL,
+  `pk_id` varchar(255) NOT NULL,
+  `fk_user_id` varchar(255) NULL,
   `balance` bigint NULL,
   `version` int(11) NULL,
   `update_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP,
@@ -39,8 +39,8 @@ CREATE TABLE `t_user_fund`  (
 );
 
 CREATE TABLE `t_user_fund_record`  (
-  `pk_id` bigint NOT NULL,
-  `fk_user_id` bigint NULL,
+  `pk_id` varchar(255) NOT NULL,
+  `fk_user_id` varchar(255) NULL,
   `amount` bigint NULL,
   `type` int(11) NULL,
   `source` int(11) NULL,
@@ -49,9 +49,9 @@ CREATE TABLE `t_user_fund_record`  (
 );
 
 CREATE TABLE `t_order`  (
-  `pk_id` bigint NOT NULL,
-  `fk_good_id` bigint NULL,
-  `fk_user_id` bigint NULL,
+  `pk_id` varchar(255) NOT NULL,
+  `fk_good_id` varchar(255) NULL,
+  `fk_user_id` varchar(255) NULL,
   `goods_name` varchar(255) NULL,
   `price` bigint(10) NULL,
   `num` int(11) NULL,

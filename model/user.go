@@ -1,9 +1,11 @@
 package model
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type UserInfo struct {
-	PkId     int64  `json:"pk_id"`
+	PkId     string `json:"pk_id"`
 	UserName string `json:"user_name"`
 	Password string `json:"password"`
 	//...
@@ -12,8 +14,8 @@ type UserInfo struct {
 }
 
 type UserAddress struct {
-	PkId     int64  `json:"pk_id"`
-	FkUserId int64  `json:"fk_user_id"`
+	PkId     string `json:"pk_id"`
+	FkUserId string `json:"fk_user_id"`
 	Province string `json:"province"`
 	City     string `json:"city"`
 	Detail   string `json:"detail"`
@@ -22,20 +24,20 @@ type UserAddress struct {
 }
 
 type UserFund struct {
-	PkId     int64 `json:"pk_id"`
-	FkUserId int64 `json:"fk_user_id"`
-	Balance  int64 `json:"balance"`
-	Version  int   `json:"version"`
+	PkId     string `json:"pk_id"`
+	FkUserId string `json:"fk_user_id"`
+	Balance  int64  `json:"balance"`
+	Version  int    `json:"version"`
 	//...
 	UpdateTime string `json:"update_time"`
 }
 
 type UserFundRecord struct {
-	PkId     int64 `json:"pk_id"`
-	FkUserId int64 `json:"fk_user_id"`
-	Amount   int64 `json:"amount"`
-	Type     int   `json:"type"`
-	Source   int   `json:"source"`
+	PkId     string `json:"pk_id"`
+	FkUserId string `json:"fk_user_id"`
+	Amount   int64  `json:"amount"`
+	Type     int    `json:"type"`
+	Source   int    `json:"source"`
 	//...
 	CreateTime string `json:"create_time"`
 }
@@ -49,8 +51,9 @@ func (u *UserInfo) InsertUser() error {
 	}
 	_, err = stmt.Exec(u.PkId, u.UserName, u.Password, u.Token)
 	if err != nil {
-		return err
+		return fmt.Errorf("%s %s", u.UserName, err.Error())
 	}
+	defer stmt.Close()
 	return nil
 }
 
@@ -58,6 +61,7 @@ func (u *UserInfo) GetUserById(id interface{}) (*UserInfo, error) {
 	sql := fmt.Sprintf(
 		"select * from t_user_info where pk_id = ?")
 	row, err := mdb.Query(sql, id)
+	defer row.Close()
 	if err != nil {
 		return nil, err
 	}
@@ -77,6 +81,7 @@ func (u *UserInfo) GetUserByName(userName string) (*UserInfo, error) {
 	sql := fmt.Sprintf(
 		"select * from t_user_info where user_name = ?")
 	row, err := mdb.Query(sql, userName)
+	defer row.Close()
 	if err != nil {
 		return nil, err
 	}
@@ -96,6 +101,7 @@ func (u *UserInfo) UpdateTokenById(token, id interface{}) error {
 	sql := fmt.Sprintf(
 		"update t_user_info set token = ? where pk_id = ?")
 	stmt, err := mdb.Prepare(sql)
+	defer stmt.Close()
 	if err != nil {
 		return err
 	}
@@ -111,6 +117,7 @@ func (u *UserAddress) InsertUserAddress() error {
 	sql := fmt.Sprintf(
 		"INSERT INTO `t_user_address`(`pk_id`, `fk_user_id`, `province`, `city`,`detail`) VALUES (?, ?, ?, ?,?)")
 	stmt, err := mdb.Prepare(sql)
+	defer stmt.Close()
 	if err != nil {
 		return err
 	}
@@ -125,6 +132,7 @@ func (u *UserAddress) GetUserAddressForLast(userId interface{}) (*UserAddress, e
 	sql := fmt.Sprintf(
 		"select * from t_user_address where fk_user_id = ? order by pk_id desc limit 1")
 	row, err := mdb.Query(sql, userId)
+	defer row.Close()
 	if err != nil {
 		return nil, err
 	}
@@ -144,6 +152,7 @@ func (u *UserFund) InsertUserFund() error {
 	sql := fmt.Sprintf(
 		"INSERT INTO `t_user_fund`(`pk_id`, `fk_user_id`, `balance`, `version`) VALUES (?, ?, ?, 0)")
 	stmt, err := mdb.Prepare(sql)
+	defer stmt.Close()
 	if err != nil {
 		return err
 	}
@@ -158,6 +167,7 @@ func (u *UserFund) GetUserFundByUserId(userId interface{}) (*UserFund, error) {
 	sql := fmt.Sprintf(
 		"select * from t_user_fund where fk_user_id = ?")
 	row, err := mdb.Query(sql, userId)
+	defer row.Close()
 	if err != nil {
 		return nil, err
 	}
@@ -177,6 +187,7 @@ func (u *UserFund) AddFundBalanceByUserId(userId interface{}, amount int64) erro
 	sql := fmt.Sprintf(
 		"update t_user_fund set balance = balance + ? , version = version + 1 where fk_user_id = ?")
 	stmt, err := mdb.Prepare(sql)
+	defer stmt.Close()
 	if err != nil {
 		return err
 	}
@@ -191,6 +202,7 @@ func (u *UserFundRecord) InsertUserFundRecord() error {
 	sql := fmt.Sprintf(
 		"INSERT INTO `t_user_fund_record` (`pk_id`, `fk_user_id`, `amount`, `type`,`source`) VALUES (?, ?, ?, ?, ?)")
 	stmt, err := mdb.Prepare(sql)
+	defer stmt.Close()
 	if err != nil {
 		return err
 	}

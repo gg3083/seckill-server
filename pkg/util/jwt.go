@@ -13,13 +13,13 @@ import (
 var jwtSecret []byte
 
 type Claims struct {
-	PkId     int64  `json:"pk_id"`
+	PkId     string `json:"pk_id"`
 	UserName string `json:"user_name"`
 	jwt.StandardClaims
 }
 
 // GenerateToken generate tokens used for auth
-func GenerateToken(pkId int64, userName string) (string, error) {
+func GenerateToken(pkId string, userName string) (string, error) {
 	nowTime := time.Now()
 	expireTime := nowTime.Add(time.Duration(60) * time.Minute) // 1一个小时的过期时间
 

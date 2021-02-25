@@ -3,9 +3,9 @@ package model
 import "fmt"
 
 type Order struct {
-	PkId            int64  `json:"pk_id"`
-	FkGoodId        int64  `json:"fk_good_id"`
-	FkUserId        int64  `json:"fk_user_id"`
+	PkId            string `json:"pk_id"`
+	FkGoodId        string `json:"fk_good_id"`
+	FkUserId        string `json:"fk_user_id"`
 	GoodsName       string `json:"goods_name"`
 	Price           int64  `json:"price"`
 	Num             int    `json:"num"`
@@ -20,6 +20,7 @@ func (o *Order) Insert() error {
 	sql := fmt.Sprintf(
 		"INSERT INTO `t_order`(`pk_id`, `fk_good_id`, `fk_user_id`, `goods_name`, `price`, `num`, `total_price`, `user_name`,`delivery_address`,`pay_time`) VALUES (?, ?, ?, ?, ?, ?, ?,?, ?, 0)")
 	stmt, err := mdb.Prepare(sql)
+	defer stmt.Close()
 	if err != nil {
 		return err
 	}

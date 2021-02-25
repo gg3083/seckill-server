@@ -18,13 +18,13 @@ var (
 var TableNameList = []string{"t_goods", "t_user_info", "t_user_address", "t_user_fund", "t_user_fund_record", "t_order"}
 
 func InitMysql() {
-	uri := fmt.Sprintf("%s:%s@%s(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", "root", "root", "tcp", "localhost", "3306", "seckill-server")
+	uri := fmt.Sprintf("%s:%s@%s(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", "root", "Qwe123.0", "tcp", "localhost", "3306", "seckill-server")
 	mdb, err = sql.Open("mysql", uri)
 	if err != nil {
 		log.Fatalf("Open mysql failed,err:%v\n", err)
 	}
 	mdb.SetConnMaxLifetime(100 * time.Second) //最大连接周期，超过时间的连接就close
-	mdb.SetMaxOpenConns(100)                  //设置最大连接数
+	mdb.SetMaxOpenConns(50)                   //设置最大连接数
 	mdb.SetMaxIdleConns(16)                   //设置闲置连接数
 	existTable(TableNameList)
 }

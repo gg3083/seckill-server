@@ -1,14 +1,15 @@
 package service
 
 import (
+	"log"
 	"seckill-server/model"
 	"seckill-server/pkg/consts"
 	"seckill-server/pkg/util"
 )
 
 type Order struct {
-	FkGoodId        int64  `json:"fk_good_id"`
-	FkUserId        int64  `json:"fk_user_id"`
+	FkGoodId        string `json:"fk_good_id"`
+	FkUserId        string `json:"fk_user_id"`
 	Price           int64  `json:"price"`
 	Num             int    `json:"num"`
 	TotalPrice      int64  `json:"total_price"`
@@ -22,29 +23,25 @@ func (o *Order) Buy() (*model.Order, error) {
 	goodsService := Goods{
 		PkId: o.FkGoodId,
 	}
-	if _, err := goodsService.ValidStock(); err != nil {
+	hasStock, goods, err := goodsService.ValidStock()
+	if err != nil || !hasStock {
 		return nil, err
 	}
 
-	goods, err := goodsService.Get()
-
-	if err != nil {
+	//增加商品销量
+	if err := goodsService.Update(o.Num, goods.Version); err != nil {
 		return nil, err
 	}
-
 	//检测用户余额
 	fundService := UserFund{
 		FkUserId: o.FkUserId,
 	}
+	o.Price = util.Multiply10000(o.Price)
 	if _, err := fundService.ValidBalance(o.Price * int64(o.Num)); err != nil {
 		return nil, err
 	}
 	//扣钱
 	if err := fundService.AddBalance(-(o.Price * int64(o.Num)), consts.AmountSub); err != nil {
-		return nil, err
-	}
-	//增加商品销量
-	if err := goodsService.Update(o.Num); err != nil {
 		return nil, err
 	}
 
@@ -65,6 +62,7 @@ func (o *Order) Buy() (*model.Order, error) {
 	if err := orderDao.Insert(); err != nil {
 		return nil, err
 	}
+	log.Printf("用户%s 购买成功\n", o.UserName)
 	return &orderDao, err
 
 }

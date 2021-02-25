@@ -9,10 +9,10 @@ import (
 )
 
 type BuyForm struct {
-	FkGoodId   int64 `json:"fk_good_id"`
-	Price      int64 `json:"price"`
-	Num        int   `json:"num"`
-	TotalPrice int64 `json:"total_price"`
+	FkGoodId   string `json:"fk_good_id"`
+	Price      int64  `json:"price"`
+	Num        int    `json:"num"`
+	TotalPrice int64  `json:"total_price"`
 	Address    struct {
 		PkId     int    `json:"pk_id"`
 		Province string `json:"province"`

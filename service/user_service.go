@@ -24,7 +24,7 @@ func (user *User) Register() (*model.UserInfo, error) {
 	}
 	info, _ := userDao.GetUserByName(user.UserName)
 	if info != nil {
-		return nil, errors.New("用户名已存在!")
+		return nil, errors.New(user.UserName + ": 用户名已存在!")
 	}
 	//生成token
 	token, err := util.GenerateToken(userId, user.UserName)
@@ -82,13 +82,13 @@ func (user *User) GetByPkId(id interface{}) (*model.UserInfo, error) {
 }
 
 type UserAddress struct {
-	FkUserId int64
+	FkUserId string
 	Province string
 	City     string
 	Detail   string
 }
 
-func (u *UserAddress) InsertUserAddress() (int64, error) {
+func (u *UserAddress) InsertUserAddress() (string, error) {
 	id := util.GetUniqueNo(consts.BusinessUserAddressTable)
 	addressDao := model.UserAddress{
 		PkId:     id,

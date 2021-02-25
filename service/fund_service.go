@@ -8,7 +8,7 @@ import (
 )
 
 type UserFund struct {
-	FkUserId int64
+	FkUserId string
 	Source   int
 }
 
@@ -50,10 +50,10 @@ func (fund *UserFund) AddBalance(amount int64, amountType int) error {
 }
 
 type UserFundRecord struct {
-	FkUserId int64 `json:"fk_user_id"`
-	Amount   int64 `json:"amount"`
-	Type     int   `json:"type"`
-	Source   int   `json:"source"`
+	FkUserId string `json:"fk_user_id"`
+	Amount   int64  `json:"amount"`
+	Type     int    `json:"type"`
+	Source   int    `json:"source"`
 }
 
 func (fund *UserFundRecord) AddRecord(amount int64, recordType int) error {

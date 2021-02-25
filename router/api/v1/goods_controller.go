@@ -9,7 +9,6 @@ import (
 	"seckill-server/pkg/util"
 	"seckill-server/request"
 	"seckill-server/service"
-	"strconv"
 	"time"
 )
 
@@ -26,13 +25,8 @@ func GetGoods(c *gin.Context) {
 		app.ErrorResp(c, http.StatusBadRequest, "Id不能为空")
 		return
 	}
-	id, err := strconv.ParseInt(paramId, 10, 64)
-	if err != nil {
-		app.ErrorResp(c, http.StatusBadRequest, "Id错误")
-		return
-	}
 	goodsService := service.Goods{
-		PkId: id,
+		PkId: paramId,
 	}
 	res, err := goodsService.Get()
 	if err != nil {
